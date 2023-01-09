@@ -1,8 +1,10 @@
 import os
+import re
 import pandas as pd
 from serpapi import GoogleSearch
 from IPython.display import display
 from nltk.tokenize import word_tokenize, MWETokenizer
+
 
 google_search_api_key = "292e7b0f85d63c22f169a196374dcf7d61ff0be7f7879be6613c55b0b2568215"
 search_term = "Data Analyst"
@@ -62,8 +64,20 @@ keywords_general = [
     'crossover',  'data_lake', 'data_lakes', 'bi', 
 ]
 
-# Bind Multi-word tokens
+# Keywords list
+keywords = keywords_programming
 
+# Bind Multi-word tokens
+token_dict = {}
+mwe_tokenizer = MWETokenizer(separator="_")
+regx = re.compile('\W')
+for string in keywords:
+    if string.isalnum() != True:
+        separater = regx.findall(string)
+        token_list = string.split(separater[0])
+        mwe_tokenizer.add_mwe(tuple(token_list))
+        key = re.sub('\W+\s*', '_', string)
+        token_dict[key] = string
 
 # Execute the search to retrieve the results
 for x in range(3):
@@ -88,13 +102,22 @@ description_list = current_day_jobs_df["description"].values.tolist()
 
 # Tokenize the strings to obtain list of tokens
 description_tokens = []
-
 for description in description_list:
-    description_tokens += word_tokenize(description.lower())
 
-# Remove punctuations from tokens
+    # Remove punctuations from strings
+    cleaned_description = re.sub('\W+\s*', ' ', description)
 
-# Recombine the tokens and retokenize them using MWETokenizer
+    # Tokenize the string
+    cleaned_tokens = mwe_tokenizer.tokenize(cleaned_description.lower().split())
+
+    # Replace the Multi-word token with the actual token
+    for index, string in enumerate(cleaned_tokens):
+        if string in list(token_dict.keys()):
+            cleaned_tokens[index] = token_dict[string]
+
+    # Add to complete list of tokens        
+    description_tokens += cleaned_tokens
+    
 
 # Filter out stopwords
 
