@@ -142,7 +142,7 @@ data = [Bar(x=x_values, y=y_values)]
 
 x_axis_config = {'title': 'Skills'}
 y_axis_config = {'title': 'Frequencies'}
-my_layout = Layout(title='Top Data Analyst Skills', xaxis=x_axis_config, yaxis=y_axis_config)
+my_layout = Layout(title='Top Data Analyst Skills In Demand', xaxis=x_axis_config, yaxis=y_axis_config)
 offline.plot({'data': data, 'layout': my_layout}, filename='skills_demand.html')
 
 # Think about the metric to measure the demand
