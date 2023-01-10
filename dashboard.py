@@ -3,6 +3,8 @@ import re
 import pandas as pd
 from serpapi import GoogleSearch
 from IPython.display import display
+from plotly.graph_objs import Bar, Layout
+from plotly import offline
 from nltk.tokenize import word_tokenize, MWETokenizer
 
 
@@ -70,14 +72,18 @@ keywords = keywords_programming
 # Bind Multi-word tokens
 token_dict = {}
 mwe_tokenizer = MWETokenizer(separator="_")
-regx = re.compile('\W')
+regx = re.compile('[,.;@#_+-?!&$/]+')
 for string in keywords:
     if string.isalnum() != True:
-        separater = regx.findall(string)
-        token_list = string.split(separater[0])
-        mwe_tokenizer.add_mwe(tuple(token_list))
-        key = re.sub('\W+\s*', '_', string)
-        token_dict[key] = string
+        separator = regx.findall(string)
+        print(string)
+        if separator[0] == '#' or separator[0] == '++':
+            mwe_tokenizer.add_mwe(tuple(string.split()))
+        else:
+            token_list = string.split(separator[0])
+            mwe_tokenizer.add_mwe(tuple(token_list))
+            key = re.sub('[,.;@#_+?!&$/]+', '_', string)
+            token_dict[key] = string
 
 # Execute the search to retrieve the results
 for x in range(3):
@@ -105,7 +111,7 @@ description_tokens = []
 for description in description_list:
 
     # Remove punctuations from strings
-    cleaned_description = re.sub('\W+\s*', ' ', description)
+    cleaned_description = re.sub('[,.;@_?!&$/]+\s*', ' ', description)
 
     # Tokenize the string
     cleaned_tokens = mwe_tokenizer.tokenize(cleaned_description.lower().split())
@@ -119,12 +125,24 @@ for description in description_list:
     description_tokens += cleaned_tokens
     
 
-# Filter out stopwords
-
-# Filter out words that are not in keyword lists
+# Filter out stopwords and words that are not in keyword lists
+filtered_description_tokens = list(filter(lambda x: x in keywords, description_tokens))
 
 # Convert result list to dataframe
+description_tokens_df = pd.DataFrame({'tokens': filtered_description_tokens})
 
-# Group by and count the number of occurence for each unique word
+# Count the number of occurence for each unique word
+token_counts = description_tokens_df['tokens'].value_counts().to_dict()
+print(token_counts)
+
+# Plot frequency graph of tokens
+x_values = [x.upper() for x in list(token_counts.keys())]
+y_values = list(token_counts.values())
+data = [Bar(x=x_values, y=y_values)]
+
+x_axis_config = {'title': 'Skills'}
+y_axis_config = {'title': 'Frequencies'}
+my_layout = Layout(title='Top Data Analyst Skills', xaxis=x_axis_config, yaxis=y_axis_config)
+offline.plot({'data': data, 'layout': my_layout}, filename='skills_demand.html')
 
 # Think about the metric to measure the demand
