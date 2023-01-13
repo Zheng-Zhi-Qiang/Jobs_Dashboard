@@ -1,14 +1,18 @@
 import os
 import re
 import pandas as pd
+import datetime
 from serpapi import GoogleSearch
 from IPython.display import display
 from plotly.graph_objs import Bar, Layout
 from plotly import offline
 from nltk.tokenize import word_tokenize, MWETokenizer
+from google.cloud import bigquery
 
+# Current Date
+current_date = datetime.date.today()
 
-google_search_api_key = "292e7b0f85d63c22f169a196374dcf7d61ff0be7f7879be6613c55b0b2568215"
+google_search_api_key = "2790b3e4171eab9e05796d210149d3b9db3f21e59baaac28a01edb107c4ae2a1"
 search_term = "Data Analyst"
 search_location = "Singapore"
 
@@ -95,13 +99,29 @@ for x in range(3):
     jobs_df = pd.DataFrame(jobs)
     print(len(jobs_df.index))
     jobs_df = pd.concat([jobs_df, pd.json_normalize(jobs_df["detected_extensions"])], axis=1).drop("detected_extensions", 1)
-    display(jobs_df)
-    print(len(jobs_df.index))
+    if 'salary' in jobs_df.columns:
+        jobs_df = jobs_df.drop('salary', 1)
+    print(jobs_df.columns)
     
     if x == 0:
         current_day_jobs_df = jobs_df
     else:
         current_day_jobs_df = current_day_jobs_df.append(jobs_df, ignore_index=True)
+
+# Add date column to dataframe and drop related links and extensions
+current_day_jobs_df['date'] = pd.to_datetime(current_date)
+current_day_jobs_df = current_day_jobs_df.drop('related_links', 1).drop('extensions', 1)
+
+# Insert data into BigQuery
+client = bigquery.Client()
+table = client.get_table('trans-gate-374512.Singapore_Jobs.raw_jobs')
+errors = client.insert_rows_from_dataframe(table, current_day_jobs_df)
+if errors:
+    print(errors)
+    print('Upload failed')
+else: 
+    print('Data loaded into table')
+
 
 # Convert the description column into a list
 description_list = current_day_jobs_df["description"].values.tolist()
@@ -133,7 +153,6 @@ description_tokens_df = pd.DataFrame({'tokens': filtered_description_tokens})
 
 # Count the number of occurence for each unique word
 token_counts = description_tokens_df['tokens'].value_counts().to_dict()
-print(token_counts)
 
 # Plot frequency graph of tokens
 x_values = [x.upper() for x in list(token_counts.keys())]
