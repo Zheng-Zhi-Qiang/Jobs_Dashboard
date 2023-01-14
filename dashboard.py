@@ -9,6 +9,11 @@ from plotly import offline
 from nltk.tokenize import word_tokenize, MWETokenizer
 from google.cloud import bigquery
 
+# Project Details
+project = "trans-gate-374512"
+dataset_id = "Singapore_Jobs"
+dataset_ref = bigquery.DatasetReference(project, dataset_id)
+
 # Current Date
 current_date = datetime.date.today()
 
@@ -80,7 +85,6 @@ regx = re.compile('[,.;@#_+-?!&$/]+')
 for string in keywords:
     if string.isalnum() != True:
         separator = regx.findall(string)
-        print(string)
         if separator[0] == '#' or separator[0] == '++':
             mwe_tokenizer.add_mwe(tuple(string.split()))
         else:
@@ -114,17 +118,24 @@ current_day_jobs_df = current_day_jobs_df.drop('related_links', 1).drop('extensi
 
 # Insert data into BigQuery
 client = bigquery.Client()
-table = client.get_table('trans-gate-374512.Singapore_Jobs.raw_jobs')
+table_ref = dataset_ref.table("raw_jobs")
+table = client.get_table(table_ref)
 errors = client.insert_rows_from_dataframe(table, current_day_jobs_df)
-if errors:
+if errors == []:
     print(errors)
     print('Upload failed')
 else: 
     print('Data loaded into table')
 
+# Extract full dataset from BigQuery
+table_ref = dataset_ref.table("raw_jobs")
+table = client.get_table(table_ref)
+
+complete_jobs_df = client.list_rows(table).to_dataframe()
+
 
 # Convert the description column into a list
-description_list = current_day_jobs_df["description"].values.tolist()
+description_list = complete_jobs_df["description"].values.tolist()
 
 # Tokenize the strings to obtain list of tokens
 description_tokens = []
@@ -151,17 +162,35 @@ filtered_description_tokens = list(filter(lambda x: x in keywords, description_t
 # Convert result list to dataframe
 description_tokens_df = pd.DataFrame({'tokens': filtered_description_tokens})
 
-# Count the number of occurence for each unique word
-token_counts = description_tokens_df['tokens'].value_counts().to_dict()
+# Count the number of occurence for each token
+token_counts = description_tokens_df.groupby('tokens').size().to_frame().reset_index()
+token_counts.columns = ['tokens', 'count']
+
+# Download frequency data from BigQuery
+
+# Check if there are any new tokens with frequency
+
+# Update existing frequencies
+
+# Add new tokens and their frequencies
+
+# Overwrite current frequency table in BigQuery
+table_ref = dataset_ref.table("total_token_frequencies")
+table = client.get_table(table_ref)
+
+job_config = bigquery.job.LoadJobConfig()
+job_config.write_disposition = bigquery.WriteDisposition.WRITE_TRUNCATE
+client.load_table_from_dataframe(token_counts, table_ref, job_config=job_config)
 
 # Plot frequency graph of tokens
-x_values = [x.upper() for x in list(token_counts.keys())]
-y_values = list(token_counts.values())
-data = [Bar(x=x_values, y=y_values)]
+# x_values = [x.upper() for x in list(token_counts.keys())]
+# y_values = list(token_counts.values())
+# data = [Bar(x=x_values, y=y_values)]
 
-x_axis_config = {'title': 'Skills'}
-y_axis_config = {'title': 'Frequencies'}
-my_layout = Layout(title='Top Data Analyst Skills In Demand', xaxis=x_axis_config, yaxis=y_axis_config)
-offline.plot({'data': data, 'layout': my_layout}, filename='skills_demand.html')
+# x_axis_config = {'title': 'Skills'}
+# y_axis_config = {'title': 'Frequencies'}
+# my_layout = Layout(title='Top Data Analyst Skills In Demand', xaxis=x_axis_config, yaxis=y_axis_config)
+# offline.plot({'data': data, 'layout': my_layout}, filename='skills_demand.html')
+
 
 # Think about the metric to measure the demand
