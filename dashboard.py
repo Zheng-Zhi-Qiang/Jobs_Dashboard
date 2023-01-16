@@ -105,7 +105,6 @@ for x in range(3):
     jobs_df = pd.concat([jobs_df, pd.json_normalize(jobs_df["detected_extensions"])], axis=1).drop("detected_extensions", 1)
     if 'salary' in jobs_df.columns:
         jobs_df = jobs_df.drop('salary', 1)
-    print(jobs_df.columns)
     
     if x == 0:
         current_day_jobs_df = jobs_df
@@ -183,14 +182,15 @@ job_config.write_disposition = bigquery.WriteDisposition.WRITE_TRUNCATE
 client.load_table_from_dataframe(token_counts, table_ref, job_config=job_config)
 
 # Plot frequency graph of tokens
-# x_values = [x.upper() for x in list(token_counts.keys())]
-# y_values = list(token_counts.values())
-# data = [Bar(x=x_values, y=y_values)]
+token_counts = token_counts.sort_values(by=['count'], ascending=False)
+x_values = [x.upper() for x in list(token_counts['tokens'].values)]
+y_values = list(token_counts['count'].values)
+data = [Bar(x=x_values, y=y_values)]
 
-# x_axis_config = {'title': 'Skills'}
-# y_axis_config = {'title': 'Frequencies'}
-# my_layout = Layout(title='Top Data Analyst Skills In Demand', xaxis=x_axis_config, yaxis=y_axis_config)
-# offline.plot({'data': data, 'layout': my_layout}, filename='skills_demand.html')
+x_axis_config = {'title': 'Skills'}
+y_axis_config = {'title': 'Frequencies'}
+my_layout = Layout(title='Top Data Analyst Skills In Demand', xaxis=x_axis_config, yaxis=y_axis_config)
+offline.plot({'data': data, 'layout': my_layout}, filename='skills_demand.html')
 
 
 # Think about the metric to measure the demand
