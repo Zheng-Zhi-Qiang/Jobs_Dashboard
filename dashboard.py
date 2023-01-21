@@ -3,10 +3,6 @@ import streamlit as st
 import pandas as pd
 import datetime
 import plotly.express as px
-from IPython.display import display
-from serpapi import GoogleSearch
-from plotly.graph_objs import Bar, Layout
-from plotly import offline
 from nltk.tokenize import MWETokenizer
 from google.cloud import bigquery
 
@@ -94,40 +90,8 @@ for string in keywords:
             key = re.sub('[,.;@#_+?!&$/]+', '_', string)
             token_dict[key] = string
 
-# Execute the search to retrieve the results
-# for x in range(3):
-#     start = x * 10
-#     params["start"] = start
-#     search = GoogleSearch(params)
-#     results = search.get_dict()
-#     jobs = results["jobs_results"]
-#     jobs_df = pd.DataFrame(jobs)
-#     print(len(jobs_df.index))
-#     jobs_df = pd.concat([jobs_df, pd.json_normalize(jobs_df["detected_extensions"])], axis=1).drop("detected_extensions", 1)
-#     if 'salary' in jobs_df.columns:
-#         jobs_df = jobs_df.drop('salary', 1)
-    
-#     if x == 0:
-#         current_day_jobs_df = jobs_df
-#     else:
-#         current_day_jobs_df = current_day_jobs_df.append(jobs_df, ignore_index=True)
-
-# # Add date column to dataframe and drop related links and extensions
-# current_day_jobs_df['date'] = pd.to_datetime(current_date)
-# current_day_jobs_df = current_day_jobs_df.drop('related_links', 1).drop('extensions', 1)
-
-# # Insert data into BigQuery
-client = bigquery.Client()
-# table_ref = dataset_ref.table("raw_jobs")
-# table = client.get_table(table_ref)
-# errors = client.insert_rows_from_dataframe(table, current_day_jobs_df)
-# if errors == []:
-#     print(errors)
-#     print('Upload failed')
-# else: 
-#     print('Data loaded into table')
-
 # Extract full dataset from BigQuery
+client = bigquery.Client()
 table_ref = dataset_ref.table("raw_jobs")
 table = client.get_table(table_ref)
 
@@ -178,6 +142,5 @@ client.load_table_from_dataframe(token_counts, table_ref, job_config=job_config)
 token_counts = token_counts.sort_values(by=['count'], ascending=False).reset_index().drop('index', 1)
 frequencies_fig = px.bar(token_counts, x='tokens', y='count')
 st.plotly_chart(frequencies_fig, use_container_width=True)
-
 
 # Think about the metric to measure the demand
