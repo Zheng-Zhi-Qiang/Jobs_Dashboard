@@ -11,25 +11,6 @@ project = "trans-gate-374512"
 dataset_id = "Singapore_Jobs"
 dataset_ref = bigquery.DatasetReference(project, dataset_id)
 
-# Current Date
-current_date = datetime.date.today()
-
-google_search_api_key = "2790b3e4171eab9e05796d210149d3b9db3f21e59baaac28a01edb107c4ae2a1"
-search_term = "Data Analyst"
-search_location = "Singapore"
-
-params = {
-    "engine": "google_jobs",
-    "q": search_term,
-    "api_key": google_search_api_key,
-    "google_domain": "google.com",
-    "location": search_location,
-    "chips": "date_posted:today",
-    "start": 0,
-    "num": "100",
-    "no_cache": "true",
-}
-
 # Keywords to look out for
 keywords_programming = [
     'sql', 'python', 'r', 'c', 'c#', 'javascript', 'js',  'java', 'scala', 'sas', 'matlab', 
