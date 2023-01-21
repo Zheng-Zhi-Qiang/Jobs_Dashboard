@@ -5,11 +5,15 @@ import datetime
 import plotly.express as px
 from nltk.tokenize import MWETokenizer
 from google.cloud import bigquery
+from google.oauth2 import service_account
 
 # Project Details
 project = "trans-gate-374512"
 dataset_id = "Singapore_Jobs"
 dataset_ref = bigquery.DatasetReference(project, dataset_id)
+credentials = service_account.Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"]
+)
 
 # Keywords to look out for
 keywords_programming = [
@@ -72,7 +76,7 @@ for string in keywords:
             token_dict[key] = string
 
 # Extract full dataset from BigQuery
-client = bigquery.Client()
+client = bigquery.Client(credentials=credentials)
 table_ref = dataset_ref.table("raw_jobs")
 table = client.get_table(table_ref)
 
