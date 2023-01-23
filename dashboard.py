@@ -1,7 +1,6 @@
 import re
 import streamlit as st
 import pandas as pd
-import datetime
 import plotly.express as px
 from nltk.tokenize import MWETokenizer
 from google.cloud import bigquery
