@@ -146,8 +146,8 @@ ax.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
 
 # Plot charts
-col1, col2 = st.columns(2)
-col1.plotly_chart(frequencies_fig, width = 1100, height = 900)
+col1, col2 = st.columns([3, 1])
+col1.plotly_chart(frequencies_fig, width = 600, height = 450)
 col2.pyplot(fig)
 
 
