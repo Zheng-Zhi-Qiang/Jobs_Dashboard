@@ -129,7 +129,7 @@ client.load_table_from_dataframe(token_counts, table_ref, job_config=job_config)
 
 # Create frequency graph of tokens
 token_counts = token_counts.sort_values(by=['count'], ascending=False).reset_index().drop('index', 1)
-frequencies_fig = px.bar(token_counts, x='tokens', y='count').update_layout(width = 1100, height = 900)
+frequencies_fig = px.bar(token_counts, x='tokens', y='count')
 
 # Filter out non keywords
 non_key = ""
@@ -137,18 +137,18 @@ nonkey_description_tokens = list(filter(lambda x: x not in keywords, description
 non_key += " ".join(nonkey_description_tokens) + " "
 
 # Create a wordcloud
-wordcloud = WordCloud(width = 800, height = 800,
+wordcloud = WordCloud(
                 background_color ='white',
                 stopwords = stop_words,
                 min_font_size = 10).generate(non_key)
-fig, ax = plt.subplots(figsize = (12, 8))
+fig, ax = plt.subplots()
 ax.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
 
 # Plot charts
 col1, col2 = st.columns([3, 1])
-col1.plotly_chart(frequencies_fig, width = 600, height = 450)
-col2.pyplot(fig)
+col1.plotly_chart(frequencies_fig, use_container_width = True)
+col2.pyplot(fig, use_container_width = True)
 
 
 # Think about the metric to measure the demand
