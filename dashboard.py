@@ -3,9 +3,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud
+from wordcloud import WordCloud, STOPWORDS
 from nltk.tokenize import MWETokenizer
-from nltk.corpus import stopwords
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
@@ -18,7 +17,7 @@ credentials = service_account.Credentials.from_service_account_info(
 )
 
 # Stopwords
-stop_words = set(stopwords.words('english'))
+stop_words = set(STOPWORDS)
 
 # Keywords to look out for
 keywords_programming = [
