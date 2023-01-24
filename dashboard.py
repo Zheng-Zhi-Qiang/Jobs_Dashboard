@@ -137,16 +137,18 @@ nonkey_description_tokens = list(filter(lambda x: x not in keywords, description
 non_key += " ".join(nonkey_description_tokens) + " "
 
 # Create a wordcloud
-wordcloud = WordCloud(
+wordcloud = WordCloud(width = 800, height = 800,
                 background_color ='white',
-                stopwords = stop_words).generate(non_key)
-plt.imshow(wordcloud, interpolation='bilinear')
+                stopwords = stop_words,
+                min_font_size = 10).generate(non_key)
+fig, ax = plt.subplots(figsize = (12, 8))
+ax.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
 
 # Plot charts
 col1, col2 = st.columns(2)
 col1.plotly_chart(frequencies_fig, use_container_width=True)
-col2.pyplot()
+col2.pyplot(fig)
 
 
 # Think about the metric to measure the demand
