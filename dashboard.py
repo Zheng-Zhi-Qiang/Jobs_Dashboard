@@ -2,7 +2,10 @@ import re
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
 from nltk.tokenize import MWETokenizer
+from nltk.corpus import stopwords
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
@@ -13,6 +16,9 @@ dataset_ref = bigquery.DatasetReference(project, dataset_id)
 credentials = service_account.Credentials.from_service_account_info(
     st.secrets["gcp_service_account"]
 )
+
+# Stopwords
+stop_words = set(stopwords.words('english'))
 
 # Keywords to look out for
 keywords_programming = [
@@ -122,9 +128,28 @@ job_config = bigquery.job.LoadJobConfig()
 job_config.write_disposition = bigquery.WriteDisposition.WRITE_TRUNCATE
 client.load_table_from_dataframe(token_counts, table_ref, job_config=job_config)
 
-# Plot frequency graph of tokens
+# Create frequency graph of tokens
 token_counts = token_counts.sort_values(by=['count'], ascending=False).reset_index().drop('index', 1)
 frequencies_fig = px.bar(token_counts, x='tokens', y='count')
 st.plotly_chart(frequencies_fig, use_container_width=True)
+
+# Filter out non keywords
+non_key = ""
+nonkey_description_tokens = list(filter(lambda x: x not in keywords, description_tokens))
+non_key += " ".join(nonkey_description_tokens) + " "
+
+# Create a wordcloud
+wordcloud = WordCloud(width = 800, height = 800,
+                background_color ='white',
+                stopwords = stop_words,
+                min_font_size = 10).generate(non_key)
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis("off")
+
+# Plot charts
+col1, col2 = st.columns(2)
+col1.plotly_chart(frequencies_fig, use_container_width=True)
+col2.pyplot
+
 
 # Think about the metric to measure the demand

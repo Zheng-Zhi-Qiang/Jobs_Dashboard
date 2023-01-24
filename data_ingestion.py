@@ -12,7 +12,7 @@ dataset_ref = bigquery.DatasetReference(project, dataset_id)
 # Current Date
 current_date = datetime.date.today()
 
-def data_analyst_ingestion():
+def data_analyst_ingestion(data, context):
     """Ingest data analyst job data"""
 
     google_search_api_key = config.config_vars['google_search_api_key']
