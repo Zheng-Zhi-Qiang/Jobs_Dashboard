@@ -148,7 +148,7 @@ plt.axis("off")
 # Plot charts
 col1, col2 = st.columns([3, 1])
 col1.plotly_chart(frequencies_fig, use_container_width = True)
-col2.pyplot(fig, use_container_width = True)
+col2.pyplot(fig)
 
 
 # Think about the metric to measure the demand
