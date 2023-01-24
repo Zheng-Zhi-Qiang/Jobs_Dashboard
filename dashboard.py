@@ -129,7 +129,7 @@ client.load_table_from_dataframe(token_counts, table_ref, job_config=job_config)
 
 # Create frequency graph of tokens
 token_counts = token_counts.sort_values(by=['count'], ascending=False).reset_index().drop('index', 1)
-frequencies_fig = px.bar(token_counts, x='tokens', y='count')
+frequencies_fig = px.bar(token_counts, x='tokens', y='count').update_layout(width = 1100, height = 900)
 
 # Filter out non keywords
 non_key = ""
@@ -147,7 +147,7 @@ plt.axis("off")
 
 # Plot charts
 col1, col2 = st.columns(2)
-col1.plotly_chart(frequencies_fig, use_container_width=True)
+col1.plotly_chart(frequencies_fig, width = 1100, height = 900)
 col2.pyplot(fig)
 
 
