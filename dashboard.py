@@ -16,6 +16,13 @@ credentials = service_account.Credentials.from_service_account_info(
     st.secrets["gcp_service_account"]
 )
 
+# Set the page configuration
+st.set_page_config(
+    page_title="Analyst Jobs Requirements",  # title of the page
+    page_icon="📈",                  # favicon
+    layout="wide",
+)
+
 # Stopwords
 stop_words = set(STOPWORDS)
 
