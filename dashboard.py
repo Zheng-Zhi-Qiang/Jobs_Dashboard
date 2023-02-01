@@ -144,7 +144,7 @@ nonkey_description_tokens = list(filter(lambda x: x not in keywords, description
 non_key += " ".join(nonkey_description_tokens) + " "
 
 # Create a wordcloud
-wordcloud = WordCloud(
+wordcloud = WordCloud(width = 150, height = 150,
                 background_color ='white',
                 stopwords = stop_words,
                 min_font_size = 10).generate(non_key)
