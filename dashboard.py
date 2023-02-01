@@ -147,7 +147,7 @@ non_key += " ".join(nonkey_description_tokens) + " "
 wordcloud = WordCloud(
                 background_color ='white',
                 stopwords = stop_words,
-                min_font_size = 8).generate(non_key)
+                min_font_size = 6).generate(non_key)
 fig, ax = plt.subplots()
 ax.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
