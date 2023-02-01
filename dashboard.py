@@ -148,7 +148,7 @@ wordcloud = WordCloud(width = 300, height = 300,
                 background_color ='white',
                 stopwords = stop_words,
                 min_font_size = 10).generate(non_key)
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize = (6, 4))
 ax.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
 
