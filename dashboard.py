@@ -144,10 +144,10 @@ nonkey_description_tokens = list(filter(lambda x: x not in keywords, description
 non_key += " ".join(nonkey_description_tokens) + " "
 
 # Create a wordcloud
-wordcloud = WordCloud(width = 150, height = 150,
+wordcloud = WordCloud(
                 background_color ='white',
                 stopwords = stop_words,
-                min_font_size = 10).generate(non_key)
+                min_font_size = 8).generate(non_key)
 fig, ax = plt.subplots()
 ax.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
