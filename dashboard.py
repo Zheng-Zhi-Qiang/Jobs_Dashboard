@@ -151,14 +151,14 @@ nonkey_description_tokens = list(filter(lambda x: x not in keywords, description
 non_key += " ".join(nonkey_description_tokens) + " "
 
 # Create a wordcloud
-wordcloud = WordCloud(width = 600, height = 600,
+wordcloud = WordCloud(width = 500, height = 500,
                 background_color = 'white',
                 stopwords = stop_words,
                 min_font_size = 4).generate(non_key)
 fig, ax = plt.subplots()
 ax.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
-plt.figure(figsize=(10,10))
+plt.figure(figsize=(8, 8))
 plt.title("Other Demanded Skills")
 
 # Plot charts
