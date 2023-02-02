@@ -158,8 +158,8 @@ wordcloud = WordCloud(width = 500, height = 500,
 fig, ax = plt.subplots()
 ax.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
-plt.figure(figsize=(8, 8))
-plt.title("Other Demanded Skills")
+plt.figure(figsize=(5, 5))
+plt.title("Other Demanded Skills", fontsize=13)
 
 # Plot charts
 col1, col2 = st.columns([3, 2])
