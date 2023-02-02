@@ -137,7 +137,8 @@ client.load_table_from_dataframe(token_counts, table_ref, job_config=job_config)
 # Create frequency graph of tokens
 token_counts = token_counts.sort_values(by=['count'], ascending=False).reset_index().drop('index', 1)
 token_counts['tokens'] = token_counts['tokens'].str.upper()
-frequencies_fig = px.bar(token_counts, x='tokens', y='count')
+frequencies_fig = px.bar(token_counts, x='tokens', y='count', title='Top Required Analyst Skills')
+frequencies_fig.update_layout(height=800)
 
 # Filter out non keywords
 non_key = ""
