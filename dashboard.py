@@ -173,7 +173,7 @@ frequencies_fig = px.bar(token_counts, x='tokens', y='count',
                         "count": "Demand"
                         },
                         title='Top Required Analyst Skills')
-frequencies_fig.update_layout(height=600)
+frequencies_fig.update_layout(height=600, font=dict(size=20))
 frequencies_fig.update_xaxes(tickangle=45)
 
 
