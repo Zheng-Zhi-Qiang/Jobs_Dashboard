@@ -31,7 +31,9 @@ custom_stopwords = [
     'tool', 'company', 'etc', 'requirement', 'solution', 'help', 'responsibilities', 'platform',
     'provide', 'operation', 'need', 'build', 'key', 'apply', 'area', 'part', 'one', 'make', 'analyse',
     'working', 'tools', 'engineering', 'good', 'strong', 'environment', 'application', 'computer science',
-    'preferred', 'year', 'job', 'prepare', 'market', 'make', 'career', 'eg', 'training', 'improve'
+    'preferred', 'year', 'job', 'prepare', 'market', 'make', 'career', 'eg', 'training', 'improve', 'e', 'g'
+    'include', 'must', 'include', 'operations', 'internal', 'plus', 'standard', 'looking', 'platforms', 'source',
+    'bachelor degree', 'big', 'various', 'issue', 'related'
 ]
 for word in custom_stopwords:
     stop_words.add(word)
