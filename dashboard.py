@@ -27,7 +27,8 @@ st.set_page_config(
 stop_words = set(STOPWORDS)
 custom_stopwords = [
     'data', 'analysis', 'role', 'create', 'will', 'within', 'across', 'able', 'required',
-    'within', 'ensure'
+    'within', 'ensure', 'analyst', 'including', 'well', 'new', 'use', 'end', 'singapore', 'using',
+    'tool', 'company', 'etc'
 ]
 for word in custom_stopwords:
     stop_words.add(word)
@@ -78,7 +79,7 @@ keywords_general = [
 keywords_custom = ['strong analytical ability', 'strong analytical skills']
 
 # Keywords list
-keywords = keywords_programming
+keywords = keywords_analyst_tools + keywords_programming
 
 # Bind Multi-word tokens
 token_dict = {}
