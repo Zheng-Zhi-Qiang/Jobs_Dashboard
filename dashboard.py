@@ -33,7 +33,8 @@ custom_stopwords = [
     'working', 'tools', 'engineering', 'good', 'strong', 'environment', 'application', 'computer science',
     'preferred', 'year', 'job', 'prepare', 'market', 'make', 'career', 'eg', 'training', 'improve', 'e', 'g'
     'include', 'must', 'include', 'operations', 'internal', 'plus', 'standard', 'looking', 'platforms', 'source',
-    'bachelor degree', 'big', 'various', 'issue', 'related'
+    'bachelor degree', 'big', 'various', 'issue', 'related', 'sources', 'after', 'join us', 'future', 'maintain',
+    'group', 'hand', 'analyze'
 ]
 for word in custom_stopwords:
     stop_words.add(word)
@@ -83,7 +84,7 @@ keywords_general = [
 # Add custom keywords
 keywords_custom = [
     'analytical ability', 'analytical skills', 'analytical skills', 'business understanding', 'time management',
-    
+    'attention to detail',
 ]
 
 # Keywords list
