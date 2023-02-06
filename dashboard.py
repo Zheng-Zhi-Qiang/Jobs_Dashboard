@@ -36,7 +36,8 @@ custom_stopwords = [
     'bachelor degree', 'big', 'various', 'issue', 'related', 'sources', 'after', 'join us', 'future', 'maintain',
     'group', 'hand', 'analyze', 'relevant', 'may', 'plan','change', 'operational', 'building', 'implement',
     'research', 'implement', 'function', 'science', 'based', 'assist', 'enable', 'employee', 'description', 'office',
-    'hands', 'multiple', 'campaign', 'supporting', 'support', 'organisation', 'years', 'benefit' 
+    'hands', 'multiple', 'campaign', 'supporting', 'support', 'organisation', 'years', 'benefit', 'requirements'
+    'least', 'review'
 ]
 for word in custom_stopwords:
     stop_words.add(word)
