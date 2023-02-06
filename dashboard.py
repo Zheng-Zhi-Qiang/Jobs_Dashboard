@@ -25,6 +25,12 @@ st.set_page_config(
 
 # Stopwords
 stop_words = set(STOPWORDS)
+custom_stopwords = [
+    'data', 'analysis', 'role', 'create', 'will', 'within', 'across', 'able', 'required',
+    'within', 'ensure'
+]
+for word in custom_stopwords:
+    stop_words.add(word)
 
 # Keywords to look out for
 keywords_programming = [
@@ -68,6 +74,9 @@ keywords_general = [
     'crossover',  'data_lake', 'data_lakes', 'bi', 
 ]
 
+# Add custom stopwords
+keywords_custom = ['strong analytical ability', 'strong analytical skills']
+
 # Keywords list
 keywords = keywords_programming
 
@@ -85,6 +94,13 @@ for string in keywords:
             mwe_tokenizer.add_mwe(tuple(token_list))
             key = re.sub('[,.;@#_+?!&$/]+', '_', string)
             token_dict[key] = string
+
+# Bind multi-word tokens for custom keywords as well
+for string in keywords_custom:
+    token_list = string.split(separator[0])
+    mwe_tokenizer.add_mwe(tuple(token_list))
+    key = string.replace(" ", "_")
+    token_dict[key] = string
 
 # Extract full dataset from BigQuery
 client = bigquery.Client(credentials=credentials)
