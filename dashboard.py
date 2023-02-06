@@ -28,7 +28,10 @@ stop_words = set(STOPWORDS)
 custom_stopwords = [
     'data', 'analysis', 'role', 'create', 'will', 'within', 'across', 'able', 'required',
     'within', 'ensure', 'analyst', 'including', 'well', 'new', 'use', 'end', 'singapore', 'using',
-    'tool', 'company', 'etc'
+    'tool', 'company', 'etc', 'requirement', 'solution', 'help', 'responsibilities', 'platform',
+    'provide', 'operation', 'need', 'build', 'key', 'apply', 'area', 'part', 'one', 'make', 'analyse',
+    'working', 'tools', 'engineering', 'good', 'strong', 'environment', 'application', 'computer science',
+    'preferred', 'year', 'job', 'prepare', 'market', 'make', 'career', 'eg', 'training', 'improve'
 ]
 for word in custom_stopwords:
     stop_words.add(word)
@@ -75,8 +78,11 @@ keywords_general = [
     'crossover',  'data_lake', 'data_lakes', 'bi', 
 ]
 
-# Add custom stopwords
-keywords_custom = ['strong analytical ability', 'strong analytical skills']
+# Add custom keywords
+keywords_custom = [
+    'analytical ability', 'analytical skills', 'analytical skills', 'business understanding', 'time management',
+    
+]
 
 # Keywords list
 keywords = keywords_analyst_tools + keywords_programming
@@ -154,7 +160,7 @@ client.load_table_from_dataframe(token_counts, table_ref, job_config=job_config)
 # Create frequency graph of tokens
 token_counts = token_counts.sort_values(by=['count'], ascending=False).reset_index().drop('index', 1)
 token_counts['tokens'] = token_counts['tokens'].str.upper()
-token_counts = token_counts.head(15)
+token_counts = token_counts.head(20)
 frequencies_fig = px.bar(token_counts, x='tokens', y='count',
                         labels={
                         "tokens": "Skills",
