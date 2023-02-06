@@ -143,7 +143,9 @@ frequencies_fig = px.bar(token_counts, x='tokens', y='count',
                         "count": "Demand"
                         },
                         title='Top Required Analyst Skills')
-frequencies_fig.update_layout(height=800)
+frequencies_fig.update_layout(height=600)
+frequencies_fig.update_xaxes(tickangle=45)
+
 
 # Filter out non keywords
 non_key = ""
@@ -152,9 +154,10 @@ non_key += " ".join(nonkey_description_tokens) + " "
 
 # Create a wordcloud
 wordcloud = WordCloud(width = 500, height = 500,
-                background_color = 'white',
+                background_color = None,
                 stopwords = stop_words,
-                min_font_size = 4).generate(non_key)
+                min_font_size = 4,
+                mode = "RGBA").generate(non_key)
 fig, ax = plt.subplots()
 ax.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
