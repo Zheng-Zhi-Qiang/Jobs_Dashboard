@@ -5,6 +5,7 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
 from nltk.tokenize import MWETokenizer
+from nltk.stem import PorterStemmer
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
@@ -36,8 +37,8 @@ custom_stopwords = [
     'bachelor degree', 'big', 'various', 'issue', 'related', 'sources', 'after', 'join us', 'future', 'maintain',
     'group', 'hand', 'analyze', 'relevant', 'may', 'plan','change', 'operational', 'building', 'implement',
     'research', 'implement', 'function', 'science', 'based', 'assist', 'enable', 'employee', 'description', 'office',
-    'hands', 'multiple', 'campaign', 'supporting', 'support', 'organisation', 'years', 'benefit', 'requirements'
-    'least', 'review'
+    'hands', 'multiple', 'campaign', 'supporting', 'support', 'organisation', 'years', 'benefit', 'requirements',
+    'least', 'review', 'work'
 ]
 for word in custom_stopwords:
     stop_words.add(word)
