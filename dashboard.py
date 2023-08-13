@@ -38,7 +38,8 @@ custom_stopwords = [
     'group', 'hand', 'analyze', 'relevant', 'may', 'plan','change', 'operational', 'building', 'implement',
     'research', 'implement', 'function', 'science', 'based', 'assist', 'enable', 'employee', 'description', 'office',
     'hands', 'multiple', 'campaign', 'supporting', 'support', 'organisation', 'years', 'benefit', 'requirements',
-    'least', 'review', 'work', 'engineer', 'u'
+    'least', 'review', 'work', 'engineer', 'u', 'risk', 'understanding', 'model', 'processes', 'process', 'ability', 'report',
+    'delivery', 'purpose', 'customer', 'closely', 'design', 'different', 'bachelor degree', 'employees', 
 ]
 for word in custom_stopwords:
     stop_words.add(word)
