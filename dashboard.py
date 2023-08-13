@@ -5,6 +5,7 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
 from nltk.tokenize import MWETokenizer
+from nltk.stem import PorterStemmer
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
@@ -25,6 +26,22 @@ st.set_page_config(
 
 # Stopwords
 stop_words = set(STOPWORDS)
+custom_stopwords = [
+    'data', 'analysis', 'role', 'create', 'will', 'within', 'across', 'able', 'required',
+    'within', 'ensure', 'analyst', 'including', 'well', 'new', 'use', 'end', 'singapore', 'using',
+    'tool', 'company', 'etc', 'requirement', 'solution', 'help', 'responsibilities', 'platform',
+    'provide', 'operation', 'need', 'build', 'key', 'apply', 'area', 'part', 'one', 'make', 'analyse',
+    'working', 'tools', 'engineering', 'good', 'strong', 'environment', 'application', 'computer science',
+    'preferred', 'year', 'job', 'prepare', 'market', 'make', 'career', 'eg', 'training', 'improve', 'e', 'g'
+    'include', 'must', 'include', 'operations', 'internal', 'plus', 'standard', 'looking', 'platforms', 'source',
+    'bachelor degree', 'big', 'various', 'issue', 'related', 'sources', 'after', 'join us', 'future', 'maintain',
+    'group', 'hand', 'analyze', 'relevant', 'may', 'plan','change', 'operational', 'building', 'implement',
+    'research', 'implement', 'function', 'science', 'based', 'assist', 'enable', 'employee', 'description', 'office',
+    'hands', 'multiple', 'campaign', 'supporting', 'support', 'organisation', 'years', 'benefit', 'requirements',
+    'least', 'review', 'work', 'engineer', 'u'
+]
+for word in custom_stopwords:
+    stop_words.add(word)
 
 # Keywords to look out for
 keywords_programming = [
@@ -68,8 +85,14 @@ keywords_general = [
     'crossover',  'data_lake', 'data_lakes', 'bi', 
 ]
 
+# Add custom keywords
+keywords_custom = [
+    'analytical ability', 'analytical skills', 'analytical skills', 'business understanding', 'time management',
+    'attention to detail',
+]
+
 # Keywords list
-keywords = keywords_programming
+keywords = keywords_analyst_tools + keywords_programming
 
 # Bind Multi-word tokens
 token_dict = {}
@@ -85,6 +108,13 @@ for string in keywords:
             mwe_tokenizer.add_mwe(tuple(token_list))
             key = re.sub('[,.;@#_+?!&$/]+', '_', string)
             token_dict[key] = string
+
+# Bind multi-word tokens for custom keywords as well
+for string in keywords_custom:
+    token_list = string.split(separator[0])
+    mwe_tokenizer.add_mwe(tuple(token_list))
+    key = string.replace(" ", "_")
+    token_dict[key] = string
 
 # Extract full dataset from BigQuery
 client = bigquery.Client(credentials=credentials)
@@ -137,13 +167,16 @@ client.load_table_from_dataframe(token_counts, table_ref, job_config=job_config)
 # Create frequency graph of tokens
 token_counts = token_counts.sort_values(by=['count'], ascending=False).reset_index().drop('index', axis=1)
 token_counts['tokens'] = token_counts['tokens'].str.upper()
+token_counts = token_counts.head(20)
 frequencies_fig = px.bar(token_counts, x='tokens', y='count',
                         labels={
                         "tokens": "Skills",
                         "count": "Demand"
                         },
                         title='Top Required Analyst Skills')
-frequencies_fig.update_layout(height=800)
+frequencies_fig.update_layout(height=600)
+frequencies_fig.update_xaxes(tickangle=45)
+
 
 # Filter out non keywords
 non_key = ""
@@ -151,15 +184,15 @@ nonkey_description_tokens = list(filter(lambda x: x not in keywords, description
 non_key += " ".join(nonkey_description_tokens) + " "
 
 # Create a wordcloud
-wordcloud = WordCloud(width = 500, height = 500,
-                background_color = 'white',
+wordcloud = WordCloud(width = 450, height = 450,
+                background_color = None,
                 stopwords = stop_words,
-                min_font_size = 4).generate(non_key)
+                min_font_size = 4,
+                mode = "RGBA").generate(non_key)
 fig, ax = plt.subplots()
 ax.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
-plt.figure(figsize=(5, 5))
-plt.title("Other Demanded Skills", fontsize=13)
+plt.figure(figsize=(4.5, 4.5))
 
 # Plot charts
 col1, col2 = st.columns([3, 2])
